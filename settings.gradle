@@ -1,0 +1,6 @@
+rootProject.name = 'depot-shop'
+
+include 'depotshop-api'
+include 'depotshop-domain'
+include 'depotshop-infra'
+
