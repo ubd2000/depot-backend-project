@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: depotshop-api
+
+server:
+  port: 8085
