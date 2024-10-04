@@ -5,6 +5,9 @@ repositories {
 	mavenCentral()
 }
 
+bootJar { enabled = true }
+jar { enabled = false }
+
 dependencies {
 	implementation project(':depotshop-domain')
 	implementation project(':depotshop-infra')

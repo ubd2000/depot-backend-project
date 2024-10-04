@@ -1,11 +1,15 @@
 group = 'com.depot.shopping'
 version = '0.0.1-SNAPSHOT'
 
+//TO-DO: 차 후 Batch 모듈을 제대로 구성 시 bootJar를 true로 변경하고 jar를 false로 변경
+bootJar { enabled = false }
+jar { enabled = true }
+
 repositories {
 	mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-batch'
-	testImplementation 'org.springframework.batch:spring-batch-test'
+//	implementation 'org.springframework.boot:spring-boot-starter-batch'
+//	testImplementation 'org.springframework.batch:spring-batch-test'
 }

@@ -13,6 +13,9 @@ plugins {
 group = 'com.depot.shopping'
 version = '0.0.1-SNAPSHOT'
 
+bootJar { enabled = false }
+jar { enabled = true }
+
 allprojects {
     group = 'com.depot.shopping'
     version = '0.0.1-SNAPSHOT'
