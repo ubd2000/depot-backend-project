@@ -1,6 +1,13 @@
 spring:
-  application:
-    name: depotshop-api
+  profiles:
+    group:
+      local: domain, infra
 
 server:
   port: 8085
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test

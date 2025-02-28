@@ -22,14 +22,9 @@ allprojects {
     sourceCompatibility = '17'
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
-
 subprojects {
     apply plugin: "java"
+    apply plugin: 'java-library'
     apply plugin: "io.spring.dependency-management"
     apply plugin: "org.springframework.boot"
 
