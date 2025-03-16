@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class Users {
 
   @Id
+  @GeneratedValue(generator = "users_seq")
   @Column(name = "seq_id")
   private long seqId;
   @Column(name = "user_id")
