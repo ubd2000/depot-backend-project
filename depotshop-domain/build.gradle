@@ -8,4 +8,7 @@ dependencies {
     //SQL Parameter Logging
     implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.2")
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // 시큐리티 추가
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 }

@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.*;
  * @author DongMin Kim
  */
 @Tag(name = "Depot Shop", description = "Depot Shop Api")
-@RestController("/api")
+@RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class UserController {
 
