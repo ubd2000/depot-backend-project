@@ -1,4 +1,4 @@
-package com.depot.shopping.config;
+package com.depot.shopping.api.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
