@@ -2,8 +2,10 @@ package com.depot.shopping.domain.user.service;
 
 import com.depot.shopping.domain.user.entity.Users;
 import com.depot.shopping.domain.user.repository.testUserRepository;
-import com.depot.shopping.exception.CustomUserNotFoundException;
+import com.depot.shopping.error.exception.CustomUserNotFoundException;
+import com.depot.shopping.error.exception.CustomUserWrongPwdException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,19 +18,19 @@ import java.util.Optional;
 public class AuthService {
 
     private final testUserRepository testUserRepository;
-//    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public String login(Users loginUser) {
 
         Users user = Optional.ofNullable(testUserRepository.findByUserId(loginUser.getUserId()))
                 .orElseThrow(() -> new CustomUserNotFoundException("User not found"));
 
-//        // 입력한 비밀번호와 DB의 해시된 비밀번호 비교
-//        if (!passwordEncoder.matches(loginUser.getUserPasswd(), user.getUserPasswd())) {
-//            throw new BadCredentialsException("Invalid password");
-//        }
+        // 입력한 비밀번호와 DB의 해시된 비밀번호 비교 / 임시데이터 (암호화X 기준이라 한번 가공)
+        if (!passwordEncoder.matches(loginUser.getUserPasswd(), passwordEncoder.encode(user.getUserPasswd()))) {
+            throw new CustomUserWrongPwdException("Invalid password");
+        }
 
         // 로그인 성공 시 JWT 토큰 발급
-        return "test_token_setting";
+         return "test_token_setting";
     }
 }
