@@ -2,6 +2,7 @@ package com.depot.shopping.api.user.controller;
 
 import com.depot.shopping.api.user.dto.UserDto;
 import com.depot.shopping.domain.user.entity.AuthResponse;
+import com.depot.shopping.domain.user.entity.JwtDTO;
 import com.depot.shopping.domain.user.service.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserDto userDto) {
-        String token = authService.login(UserDto.toEntity(userDto));
+        JwtDTO token = authService.login(UserDto.toEntity(userDto));
 
-        return ResponseEntity.ok(new AuthResponse(token));
+        return ResponseEntity.ok(new AuthResponse(token.getAccessToken()));
     }
 }

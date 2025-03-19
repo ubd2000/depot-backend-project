@@ -46,8 +46,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGlobalException(Exception e) {
         Map<String, Object> response = new HashMap<>();
-        response.put("status", ErrorCode.USER_WRONG_PWD.getStatus());
-        response.put("message", ErrorCode.USER_WRONG_PWD.getErrorCd());
+        response.put("status", ErrorCode.INTERNAL_SERVER_ERROR.getStatus());
+        response.put("errorCd", ErrorCode.INTERNAL_SERVER_ERROR.getErrorCd());
+        response.put("message", e.getMessage());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
