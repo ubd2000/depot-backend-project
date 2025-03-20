@@ -1,5 +1,6 @@
 package com.depot.shopping.api.config;
 
+import com.depot.shopping.domain.config.JwtProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,6 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -28,7 +32,7 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtProvider jwtProvider) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
@@ -50,7 +54,14 @@ public class SecurityConfig {
 
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWT Token 인증방식으로 세션은 필요없으므로 비활성화
-                );
+                )
+
+                .addFilterBefore(new JwtFilter(jwtProvider, List.of(
+                        "/auth/login",
+                        "/images/**",
+                        "/js/**",
+                        "/css/**"
+                )), UsernamePasswordAuthenticationFilter.class); // 🔹 특정 URL 제외 설정
 
         // 사용자 인증처리 컴포넌트 서비스 등록
         //http.userDetailsService(service);

@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 컨트롤러에서 사용되는 예외처리
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)

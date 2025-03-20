@@ -17,16 +17,16 @@ public class TokenService {
         this.jwtProvider = jwtProvider;
     }
 
-    public String generateAccessToken(String username) {
-        return jwtProvider.createAccessToken(username);
+    public String generateAccessToken(String userId) {
+        return jwtProvider.createAccessToken(userId);
     }
 
-    public String generateRefreshToken(String username) {
-        return jwtProvider.createRefreshToken(username);
+    public String generateRefreshToken(String userId) {
+        return jwtProvider.createRefreshToken(userId);
     }
 
-    public boolean validateToken(String token) {
-        return jwtProvider.validateToken(token);
+    public boolean validateToken(String token, boolean isRefreshToken) {
+        return jwtProvider.validateToken(token, isRefreshToken);
     }
 
     public Authentication getAuthentication(String username) {

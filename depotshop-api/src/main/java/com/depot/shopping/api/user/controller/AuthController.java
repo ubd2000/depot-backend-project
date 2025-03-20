@@ -1,13 +1,13 @@
 package com.depot.shopping.api.user.controller;
 
 import com.depot.shopping.api.user.dto.UserDto;
-import com.depot.shopping.domain.user.entity.AuthResponse;
-import com.depot.shopping.domain.user.entity.JwtDTO;
 import com.depot.shopping.domain.user.service.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * 로그인 처리
@@ -22,8 +22,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserDto userDto) {
-        JwtDTO token = authService.login(UserDto.toEntity(userDto));
+        Map<String, Object> loginMap = authService.login(UserDto.toEntity(userDto));
 
-        return ResponseEntity.ok(new AuthResponse(token.getAccessToken()));
+        return ResponseEntity.ok(loginMap);
     }
 }

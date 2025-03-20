@@ -28,7 +28,8 @@ logging:
     org.hibernate.type: trace
 
 jwt:
-  secret: ${JWT_SECRET:VGhpc0lzQVZlcnlMb25nU2VjcmV0S2V5Rm9ySldURW5jcnlwdGlvbiEhIQ==}
+  accessKey: ${JWT_SECRET:VGhpc0lzQVZlcnlMb25nU2VjcmV0S2V5Rm9ySldURW5jcnlwdGlvbiEhIQ==}
+  refreshKey: ${JWT_RFRSH_SECRET:VGhpc0lzQVZlcnlMb25nU2VjcmV0S2V5Rm9ySldURW5jcnlwdGlvbiEhIQ==}
 ---
 
 spring:
@@ -57,6 +58,7 @@ logging:
 
 jwt:
   secret: ${JWT_SECRET:VGhpc0lzQVZlcnlMb25nU2VjcmV0S2V5Rm9ySldURW5jcnlwdGlvbiEhIQ==}
+  refreshKey: ${JWT_RFRSH_SECRET:VGhpc0lzQVZlcnlMb25nU2VjcmV0S2V5Rm9ySldURW5jcnlwdGlvbiEhIQ==}
 ---
 
 spring:
@@ -85,3 +87,4 @@ logging:
 
 jwt:
   secret: ${JWT_SECRET:VGhpc0lzQVZlcnlMb25nU2VjcmV0S2V5Rm9ySldURW5jcnlwdGlvbiEhIQ==}
+  refreshKey: ${JWT_RFRSH_SECRET:VGhpc0lzQVZlcnlMb25nU2VjcmV0S2V5Rm9ySldURW5jcnlwdGlvbiEhIQ==}
