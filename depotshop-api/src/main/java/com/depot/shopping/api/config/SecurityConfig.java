@@ -1,6 +1,6 @@
 package com.depot.shopping.api.config;
 
-import com.depot.shopping.domain.config.JwtProvider;
+import com.depot.shopping.domain.TokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,7 +32,7 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtProvider jwtProvider) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, TokenService tokenService) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
@@ -56,7 +56,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWT Token 인증방식으로 세션은 필요없으므로 비활성화
                 )
 
-                .addFilterBefore(new JwtFilter(jwtProvider, List.of(
+                .addFilterBefore(new JwtFilter(tokenService, List.of(
                         "/auth/login",
                         "/images/**",
                         "/js/**",

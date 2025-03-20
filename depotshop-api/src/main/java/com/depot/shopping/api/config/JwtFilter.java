@@ -1,12 +1,11 @@
 package com.depot.shopping.api.config;
 
-import com.depot.shopping.domain.config.JwtProvider;
+import com.depot.shopping.domain.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jdk.jshell.spi.ExecutionControl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +19,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
-    private final JwtProvider jwtProvider;
+    private final TokenService tokenService;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final List<String> excludeUrls; // 🔹 필터에서 제외할 URL 목록
 
@@ -34,7 +33,7 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = jwtProvider.resolveToken(request);
+        String token = tokenService.resolveToken(request);
 
         try {
             // 1️⃣ 토큰이 없는 경우 요청 중단
@@ -43,7 +42,7 @@ public class JwtFilter extends OncePerRequestFilter {
             }
 
             // 2️⃣ 토큰 검증
-            if (!jwtProvider.validateToken(token, false)) {
+            if (!tokenService.validateToken(token, false)) {
                 throw new SecurityException("Invalid JWT token");
             }
 
@@ -53,7 +52,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             // 5️⃣ 정상적인 토큰이면 Authentication 설정 후 요청 진행
             // 필터에서는 accessToken 만 체크, refreshToken은 컨트롤러에서 체크
-            Authentication authentication = jwtProvider.getAuthentication(token, false);
+            Authentication authentication = tokenService.getAuthentication(token, false);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
         } catch (SecurityException e) {

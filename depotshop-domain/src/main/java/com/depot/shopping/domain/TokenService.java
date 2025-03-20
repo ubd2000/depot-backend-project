@@ -1,13 +1,9 @@
 package com.depot.shopping.domain;
 
 import com.depot.shopping.domain.config.JwtProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
 
 @Service
 public class TokenService {
@@ -29,9 +25,12 @@ public class TokenService {
         return jwtProvider.validateToken(token, isRefreshToken);
     }
 
-    public Authentication getAuthentication(String username) {
-        User user = new User(username, "", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
-        return new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities());
+    public String resolveToken(HttpServletRequest request) {
+        return jwtProvider.resolveToken(request);
+    }
+
+    public Authentication getAuthentication(String token, boolean isRefreshToken) {
+        return jwtProvider.getAuthentication(token, isRefreshToken);
     }
 
 }
