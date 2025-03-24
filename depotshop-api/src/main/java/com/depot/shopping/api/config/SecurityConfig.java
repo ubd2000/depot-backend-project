@@ -38,13 +38,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorize -> authorize
 //                            .requestMatchers("/signin").permitAll()
-                                .requestMatchers("/**").permitAll() // 해당 주소 접근은 허용
-                                .requestMatchers("/swagger-ui/**").permitAll() // 해당 주소 접근은 허용
-                                .requestMatchers("/api/user/**").permitAll() // 해당 주소 접근은 허용
-                                .requestMatchers("/api/check/**").permitAll() // 해당 주소 접근은 허용
-                                .requestMatchers("/").permitAll() // 해당 주소 접근은 허용
-                                .requestMatchers("/login").permitAll() // 해당 주소 접근은 허용
-                                .requestMatchers("/images/**", "/js/**", "/css/**").permitAll() // 해당 주소 접근은 허용
+                                .requestMatchers("/auth/check", "/auth/login").permitAll() // 해당 주소 접근은 허용
+//                                .requestMatchers("/swagger-ui/**").permitAll() // 해당 주소 접근은 허용
+//                                .requestMatchers("/api/user/**").permitAll() // 해당 주소 접근은 허용
+//                                .requestMatchers("/api/check/**").permitAll() // 해당 주소 접근은 허용
+//                                .requestMatchers("/").permitAll() // 해당 주소 접근은 허용
+//                                .requestMatchers("/login").permitAll() // 해당 주소 접근은 허용
+//                                .requestMatchers("/images/**", "/js/**", "/css/**").permitAll() // 해당 주소 접근은 허용
                                 .anyRequest().authenticated()   // 그 외 요청 인증필요
                 )
 
@@ -58,10 +58,7 @@ public class SecurityConfig {
 
                 .addFilterBefore(new JwtFilter(tokenService, List.of(
                         "/auth/check",  // refreshToken 으로 accessToken 발급 요청시 컨트롤러에서 처리
-                        "/auth/login",  // 로그인 요청시, 컨트롤러에서 처리
-                        "/images/**",
-                        "/js/**",
-                        "/css/**"
+                        "/auth/login"   // 로그인 요청시, 컨트롤러에서 처리
                 )), UsernamePasswordAuthenticationFilter.class); // 🔹 특정 URL 제외 설정
 
         // 사용자 인증처리 컴포넌트 서비스 등록

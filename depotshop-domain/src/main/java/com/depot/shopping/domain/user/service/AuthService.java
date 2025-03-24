@@ -1,5 +1,6 @@
 package com.depot.shopping.domain.user.service;
 
+import com.depot.shopping.domain.RedisService;
 import com.depot.shopping.domain.TokenService;
 import com.depot.shopping.domain.user.entity.JwtDTO;
 import com.depot.shopping.domain.user.entity.Users;
@@ -26,6 +27,7 @@ public class AuthService {
     private final testUserRepository testUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
+    private final RedisService redisService;
 
     /**
      * refreshToken 으로 새로운 accessToken 발급
@@ -69,6 +71,9 @@ public class AuthService {
         if (!passwordEncoder.matches(loginUser.getUserPasswd(), passwordEncoder.encode(user.getUserPasswd()))) {
             throw new CustomUserWrongPwdException("Invalid password");
         }
+
+        // redis에 기존 토큰 있으면 만료(삭제) 처리
+        // redisService.removeToken(user.getUserId());
 
         // 로그인 성공 시 JWT 토큰 발급
         JwtDTO jwt = new JwtDTO();

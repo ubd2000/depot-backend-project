@@ -13,22 +13,37 @@ public class TokenService {
         this.jwtProvider = jwtProvider;
     }
 
+    /**
+     * accessToken 생성
+     */
     public String generateAccessToken(String userId) {
         return jwtProvider.createAccessToken(userId);
     }
 
+    /**
+     * refreshToken 생성
+     */
     public String generateRefreshToken(String userId) {
         return jwtProvider.createRefreshToken(userId);
     }
 
+    /**
+     * 토큰 검증
+     */
     public boolean validateToken(String token, boolean isRefreshToken) {
         return jwtProvider.validateToken(token, isRefreshToken);
     }
 
+    /**
+     * 토큰정보 추출
+     */
     public String resolveToken(HttpServletRequest request) {
         return jwtProvider.resolveToken(request);
     }
 
+    /**
+     * 토큰 내 사용자 정보 추출
+     */
     public Authentication getAuthentication(String token, boolean isRefreshToken) {
         return jwtProvider.getAuthentication(token, isRefreshToken);
     }
