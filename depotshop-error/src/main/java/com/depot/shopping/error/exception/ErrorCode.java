@@ -5,6 +5,9 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum ErrorCode {
+    // 토큰 에러코드
+    TOKEN_INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED.value(), "T0001", "유효한 토큰이 아닙니다."),
+
     // 유저 에러코드
     USER_NO_USER(HttpStatus.NOT_FOUND.value(), "U0001", "등록된 계정이 아닙니다."),
     USER_WRONG_PWD(HttpStatus.UNAUTHORIZED.value(), "U0002", "비밀번호가 틀렸습니다."),

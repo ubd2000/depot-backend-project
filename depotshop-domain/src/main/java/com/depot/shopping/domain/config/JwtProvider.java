@@ -116,7 +116,10 @@ public class JwtProvider {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        User user = new User(claims.getSubject(), "", new ArrayList<>());
+
+        String userId = claims.getSubject(); // ✅ userId 꺼냄
+
+        User user = new User(userId, "", new ArrayList<>());
         return new UsernamePasswordAuthenticationToken(user, token, user.getAuthorities());
     }
 }

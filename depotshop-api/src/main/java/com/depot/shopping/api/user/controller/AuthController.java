@@ -1,6 +1,7 @@
 package com.depot.shopping.api.user.controller;
 
 import com.depot.shopping.api.user.dto.UserDto;
+import com.depot.shopping.domain.user.entity.JwtDTO;
 import com.depot.shopping.domain.user.service.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -25,5 +26,12 @@ public class AuthController {
         Map<String, Object> loginMap = authService.login(UserDto.toEntity(userDto));
 
         return ResponseEntity.ok(loginMap);
+    }
+
+    @PostMapping("/check")
+    public ResponseEntity<?> refreshTokenCheck(@RequestBody JwtDTO token) {
+        Map<String, Object> tokenMap = authService.refreshTokenCheck(token);
+
+        return ResponseEntity.ok(tokenMap);
     }
 }

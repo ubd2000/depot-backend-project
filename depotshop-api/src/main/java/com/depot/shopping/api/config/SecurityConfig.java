@@ -57,7 +57,8 @@ public class SecurityConfig {
                 )
 
                 .addFilterBefore(new JwtFilter(tokenService, List.of(
-                        "/auth/login",
+                        "/auth/check",  // refreshToken 으로 accessToken 발급 요청시 컨트롤러에서 처리
+                        "/auth/login",  // 로그인 요청시, 컨트롤러에서 처리
                         "/images/**",
                         "/js/**",
                         "/css/**"

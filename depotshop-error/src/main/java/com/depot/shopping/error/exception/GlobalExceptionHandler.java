@@ -46,6 +46,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    /**
+     * 만료된 리프레시 토큰
+     */
+    @ExceptionHandler(CustomInvalidRefreshTokenException.class)
+    public ResponseEntity<Map<String, Object>> handleCustomInvalidRefreshTokenException(CustomInvalidRefreshTokenException e) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", ErrorCode.TOKEN_INVALID_REFRESH_TOKEN.getStatus());
+        response.put("errorCd", ErrorCode.TOKEN_INVALID_REFRESH_TOKEN.getErrorCd());
+        response.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGlobalException(Exception e) {
         Map<String, Object> response = new HashMap<>();
