@@ -28,7 +28,7 @@ public class AuthController {
         return ResponseEntity.ok(loginMap);
     }
 
-    @PostMapping("/check")
+    @PostMapping("/refresh")
     public ResponseEntity<?> refreshTokenCheck(@RequestBody JwtDTO token) {
         Map<String, Object> tokenMap = authService.refreshTokenCheck(token);
 

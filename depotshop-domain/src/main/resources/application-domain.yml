@@ -21,7 +21,20 @@ spring:
         dialect: org.hibernate.dialect.MariaDB106Dialect
         show-sql: true
         format_sql: true
-
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 1093562413730-q4g99afa6272tc84qir3hhbodvnns4ih.apps.googleusercontent.com
+            client-secret: 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
+            redirect-uri: http://localhost:8085/oauth/login/google
+            scope: openid email profile
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
 logging:
   level:
     org.hibernate.SQL: debug

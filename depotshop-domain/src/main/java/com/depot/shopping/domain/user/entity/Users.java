@@ -34,10 +34,6 @@ public class Users {
   private String phone;
   @Column(name = "email")
   private String email;
-  @Column(name = "oauth_id")
-  private String oauthId;
-  @Column(name = "oauth_provider")
-  private String oauthProvider;
   @Column(name = "identity_verified")
   private Boolean identityVerified;
   @Column(name = "created_user")
@@ -50,7 +46,7 @@ public class Users {
   private LocalDateTime updatedAt;
 
   @Builder
-  public Users(Long seqId, String userId, String userPasswd, String userName, String role, String status, String nickname, String phone, String email, String oauthId, String oauthProvider, Boolean identityVerified, String createdUser, LocalDateTime createdAt, String updatedUser, LocalDateTime updatedAt) {
+  public Users(Long seqId, String userId, String userPasswd, String userName, String role, String status, String nickname, String phone, String email, Boolean identityVerified, String createdUser, LocalDateTime createdAt, String updatedUser, LocalDateTime updatedAt) {
     this.seqId = seqId;
     this.userId = userId;
     this.userPasswd = userPasswd;
@@ -60,8 +56,6 @@ public class Users {
     this.nickname = nickname;
     this.phone = phone;
     this.email = email;
-    this.oauthId = oauthId;
-    this.oauthProvider = oauthProvider;
     this.identityVerified = identityVerified;
     this.createdUser = createdUser;
     this.createdAt = createdAt;

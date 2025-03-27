@@ -24,8 +24,6 @@ public class UserDto {
     private String nickname;
     private String phone;
     private String email;
-    private String oauthId;
-    private String oauthProvider;
     private Boolean identityVerified;
     private String createdUser;
     private LocalDateTime createdAt;
@@ -43,8 +41,6 @@ public class UserDto {
         this.nickname = nickname;
         this.phone = phone;
         this.email = email;
-        this.oauthId = oauthId;
-        this.oauthProvider = oauthProvider;
         this.identityVerified = identityVerified;
         this.createdUser = createdUser;
         this.createdAt = createdAt;
@@ -63,8 +59,6 @@ public class UserDto {
                 .nickname(userDto.getNickname())
                 .phone(userDto.getPhone())
                 .email(userDto.getEmail())
-                .oauthId(userDto.getOauthId())
-                .oauthProvider(userDto.getOauthProvider())
                 .identityVerified(userDto.getIdentityVerified())
                 .createdUser(userDto.getCreatedUser())
                 .createdAt(userDto.getCreatedAt())
