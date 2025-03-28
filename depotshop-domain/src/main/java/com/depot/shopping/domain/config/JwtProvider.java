@@ -43,21 +43,21 @@ public class JwtProvider {
     /**
      * Access Token 생성
      */
-    public String createAccessToken(String userId) {
-        return createToken(userId, accessTokenValidity, accessKey);
+    public String createAccessToken(Long seqId) {
+        return createToken(seqId, accessTokenValidity, accessKey);
     }
 
     /**
      * Refresh Token 생성
      */
-    public String createRefreshToken(String userId) {
-        return createToken(userId, refreshTokenValidity, refreshKey);
+    public String createRefreshToken(Long seqId) {
+        return createToken(seqId, refreshTokenValidity, refreshKey);
     }
 
-    private String createToken(String userId, long validity, Key key) {
+    private String createToken(Long seqId, long validity, Key key) {
         Date now = new Date();
         return Jwts.builder()
-                .setSubject(userId)
+                .setSubject(String.valueOf(seqId))
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + validity))
                 .signWith(key, SignatureAlgorithm.HS256)

@@ -61,8 +61,8 @@ public class OAuth2Controller {
             String id = accountInfo.get("sub").toString();
             Users userInfo = userService.snsSignUp(id);
 
-//            // 가입된 정보로 로그인 처리
-//            loginMap = authService.snsLogin(userInfo);
+            // 가입된 정보로 로그인 처리
+            loginMap = authService.snsLogin(userInfo);
         } else {
             // 조회된 SNS 정보가 없으면
             throw new CustomSnsUserGetInfoException("FAIL_GET_SNS_INFO");

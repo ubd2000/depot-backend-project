@@ -42,14 +42,14 @@ public class AuthService {
 
             // 토큰에서 userId 추출
             Authentication authInfo = tokenService.getAuthentication(tokenKey, true);
-            String userId = authInfo.getName();
+            Long seqId = Long.parseLong(authInfo.getName());
 
             // 추출한 userId로 정보 조회
-            Users user = this.getUserInfo(userId);
+            Users user = this.getUserInfo(seqId);
 
             JwtDTO jwt = new JwtDTO();
-            jwt.setAccessToken(tokenService.generateAccessToken(userId));
-            jwt.setRefreshToken(tokenService.generateRefreshToken(userId));
+            jwt.setAccessToken(tokenService.generateAccessToken(seqId));
+            jwt.setRefreshToken(tokenService.generateRefreshToken(seqId));
 
             result = this.responseData(jwt, user);
 
@@ -80,8 +80,8 @@ public class AuthService {
 
         // 로그인 성공 시 JWT 토큰 발급
         JwtDTO jwt = new JwtDTO();
-        jwt.setAccessToken(tokenService.generateAccessToken(loginUser.getUserId()));
-        jwt.setRefreshToken(tokenService.generateRefreshToken(loginUser.getUserId()));
+        jwt.setAccessToken(tokenService.generateAccessToken(user.getSeqId()));
+        jwt.setRefreshToken(tokenService.generateRefreshToken(user.getSeqId()));
 
         result = this.responseData(jwt, user);
         // 발급받은 토큰 기준으로 redis에 등록하면될듯? (추가필요)
@@ -102,8 +102,8 @@ public class AuthService {
 
         // 로그인 성공 시 JWT 토큰 발급
         JwtDTO jwt = new JwtDTO();
-        jwt.setAccessToken(tokenService.generateAccessToken(loginUser.getUserId()));
-        jwt.setRefreshToken(tokenService.generateRefreshToken(loginUser.getUserId()));
+        jwt.setAccessToken(tokenService.generateAccessToken(loginUser.getSeqId()));
+        jwt.setRefreshToken(tokenService.generateRefreshToken(loginUser.getSeqId()));
 
         result = this.responseData(jwt, user);
         // 발급받은 토큰 기준으로 redis에 등록하면될듯? (추가필요)
@@ -147,8 +147,8 @@ public class AuthService {
     /**
      * userId로 유저정보 조회
      */
-    private Users getUserInfo(String userId){
-        Users user = Optional.ofNullable(testUserRepository.findByUserId(userId))
+    private Users getUserInfo(Long seqId){
+        Users user = Optional.ofNullable(testUserRepository.findBySeqId(seqId))
                 .orElseThrow(() -> new CustomUserNotFoundException("User not found"));
 
         return user;

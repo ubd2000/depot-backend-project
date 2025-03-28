@@ -16,15 +16,15 @@ public class TokenService {
     /**
      * accessToken 생성
      */
-    public String generateAccessToken(String userId) {
-        return jwtProvider.createAccessToken(userId);
+    public String generateAccessToken(Long seqId) {
+        return jwtProvider.createAccessToken(seqId);
     }
 
     /**
      * refreshToken 생성
      */
-    public String generateRefreshToken(String userId) {
-        return jwtProvider.createRefreshToken(userId);
+    public String generateRefreshToken(Long seqId) {
+        return jwtProvider.createRefreshToken(seqId);
     }
 
     /**
