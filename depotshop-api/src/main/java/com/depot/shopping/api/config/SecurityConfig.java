@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorize -> authorize
 //                            .requestMatchers("/signin").permitAll()
-                                .requestMatchers("/auth/refresh", "/auth/login", "/oauth/**").permitAll() // 해당 주소 접근은 허용
+                                .requestMatchers("/auth/refresh", "/auth/login", "/oauth/**", "/favicon.ico").permitAll() // 해당 주소 접근은 허용
 //                                .requestMatchers("/swagger-ui/**").permitAll() // 해당 주소 접근은 허용
 //                                .requestMatchers("/api/user/**").permitAll() // 해당 주소 접근은 허용
 //                                .requestMatchers("/api/check/**").permitAll() // 해당 주소 접근은 허용
@@ -59,7 +59,8 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtFilter(tokenService, List.of(
                         "/auth/refresh",  // refreshToken 으로 accessToken 발급 요청시 컨트롤러에서 처리
                         "/auth/login",   // 로그인 요청시, 컨트롤러에서 처리
-                        "/oauth/"     // SNS 로그인 요청시 컨트롤러에서 처리
+                        "/oauth/",     // SNS 로그인 요청시 컨트롤러에서 처리
+                        "/favicon.ico"  // 이미지 등 모든 컨텐츠 파일은 프론트에서 처리
                 )), UsernamePasswordAuthenticationFilter.class); // 🔹 특정 URL 제외 설정
 
         // 사용자 인증처리 컴포넌트 서비스 등록

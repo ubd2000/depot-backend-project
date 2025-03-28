@@ -119,6 +119,8 @@ public class AuthService {
         Map<String, Object> map;
 
         long expiresIn = 3600; // 1시간 (초 단위)
+        String userId = (!"".equals(user.getUserId()) ? user.getUserId() : "ttt");
+        String userName = (!"".equals(user.getUserName()) ? user.getUserName() : "tttt");
         // accessToken	사용자가 API 요청 시 사용하는 JWT 액세스 토큰	✅ 필수
         // refreshToken	액세스 토큰이 만료되었을 때 재발급 받기 위한 토큰	✅ 필수
         // expiresIn	액세스 토큰 만료 시간 (초 단위)	✅ 필수
@@ -134,8 +136,9 @@ public class AuthService {
                 "refreshToken", jwt.getRefreshToken(),
                 "expiresIn", expiresIn,
                 "tokenType", "Bearer",
+                "seqId", userId,
                 "userId", user.getUserId(),
-                "userName", user.getUserName(),
+                "userName", userName,
                 "role", user.getRole(),
                 "issuedAt", Instant.now().toString(),
                 "expiresAt", Instant.now().plusSeconds(expiresIn).toString()
