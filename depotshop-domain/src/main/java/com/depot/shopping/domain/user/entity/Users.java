@@ -14,8 +14,7 @@ import java.time.LocalDateTime;
 public class Users {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
-  @SequenceGenerator(name = "users_seq", sequenceName = "users_seq", allocationSize = 1)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "seq_id")
   private long seqId;
   @Column(name = "user_id")
@@ -46,8 +45,7 @@ public class Users {
   private LocalDateTime updatedAt;
 
   @Builder
-  public Users(Long seqId, String userId, String userPasswd, String userName, String role, String status, String nickname, String phone, String email, Boolean identityVerified, String createdUser, LocalDateTime createdAt, String updatedUser, LocalDateTime updatedAt) {
-    this.seqId = seqId;
+  public Users(String userId, String userPasswd, String userName, String role, String status, String nickname, String phone, String email, Boolean identityVerified, String createdUser, LocalDateTime createdAt, String updatedUser, LocalDateTime updatedAt) {
     this.userId = userId;
     this.userPasswd = userPasswd;
     this.userName = userName;

@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface testUserRepository extends JpaRepository<Users, String> {
     Users findByUserId(String userId);
+
+    Users findBySeqId(long seqId);
 }

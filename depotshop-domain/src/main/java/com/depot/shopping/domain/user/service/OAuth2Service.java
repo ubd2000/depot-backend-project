@@ -2,7 +2,7 @@ package com.depot.shopping.domain.user.service;
 
 import com.depot.shopping.domain.RedisService;
 import com.depot.shopping.domain.TokenService;
-import com.depot.shopping.domain.user.entity.SnsUsers;
+import com.depot.shopping.domain.user.repository.testUserRepository;
 import com.depot.shopping.domain.user.repository.testSnsUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +25,7 @@ import java.util.UUID;
 @RequiredArgsConstructor  // ✅ Lombok을 활용한 생성자 주입
 public class OAuth2Service {
 
+    private final testUserRepository testUserRepository;
     private final testSnsUserRepository testSnsUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
@@ -78,7 +79,7 @@ public class OAuth2Service {
      * 구글 SNS 로그인
      */
     public Map<String, Object> googleLogin(String code) {
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = null;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -117,24 +118,7 @@ public class OAuth2Service {
                         Map.class
                 );
 
-                Map<String, Object> body = response.getBody();
-                if(body != null && !body.isEmpty()) {
-                    String id = body.get("sub").toString();
-
-                    // 해당 조회된 고유 id로 회원여부 구분
-                    SnsUsers user = testSnsUserRepository.findByOauthId(id);
-
-                    if(user != null) {
-                        // 회원
-
-                    } else {
-                        // 비회원
-
-                    }
-
-                    // 회원/비회원 별 처리 후 로그인처리 ㄱㄱ (토큰발급)
-                    
-                }
+                result = response.getBody();
             }
         }
 

@@ -50,7 +50,7 @@ public class UserDto {
 
     public static Users toEntity(UserDto userDto) {
         return Users.builder()
-                .seqId(userDto.getSeqId())
+//                .seqId(userDto.getSeqId())
                 .userId(userDto.getUserId())
                 .userPasswd(userDto.getUserPasswd())
                 .userName(userDto.getUserName())

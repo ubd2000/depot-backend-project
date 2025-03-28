@@ -47,6 +47,30 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * SNS 회원정보 추출 실패
+     */
+    @ExceptionHandler(CustomSnsUserGetInfoException.class)
+    public ResponseEntity<Map<String, Object>> handleCustomSnsUserGetInfoException(CustomSnsUserGetInfoException e) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", ErrorCode.SNS_USER_GET_INFO.getStatus());
+        response.put("errorCd", ErrorCode.SNS_USER_GET_INFO.getErrorCd());
+        response.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    /**
+     * 회원 등록시 오류
+     */
+    @ExceptionHandler(CustomUserInsertException.class)
+    public ResponseEntity<Map<String, Object>> handleCustomUserInsertException(CustomUserInsertException e) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", ErrorCode.USER_INSERT.getStatus());
+        response.put("errorCd", ErrorCode.USER_INSERT.getErrorCd());
+        response.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    /**
      * 만료된 리프레시 토큰
      */
     @ExceptionHandler(CustomInvalidRefreshTokenException.class)

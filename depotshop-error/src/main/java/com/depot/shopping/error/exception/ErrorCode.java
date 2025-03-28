@@ -11,6 +11,8 @@ public enum ErrorCode {
     // 유저 에러코드
     USER_NO_USER(HttpStatus.NOT_FOUND.value(), "U0001", "등록된 계정이 아닙니다."),
     USER_WRONG_PWD(HttpStatus.UNAUTHORIZED.value(), "U0002", "비밀번호가 틀렸습니다."),
+    USER_INSERT(HttpStatus.INTERNAL_SERVER_ERROR.value(), "U0003", "회원등록 중 오류가 발생하였습니다."),
+    SNS_USER_GET_INFO(HttpStatus.NOT_FOUND.value(), "U0004", "SNS 회원정보 조회 중 오류가 발생하였습니다."),
 
     // 서버 에러코드
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "E0001", "서버 오류가 발생하였습니다."),

@@ -20,7 +20,7 @@ public class SnsUsers {
   @Column(name = "seq_id")
   private long seqId;
   @Column(name = "user_seq")
-  private String userSeq;
+  private long userSeq;
   @Column(name = "oauth_id")
   private String oauthId;
   @Column(name = "oauth_provider")
@@ -35,7 +35,7 @@ public class SnsUsers {
   private LocalDateTime updatedAt;
 
   @Builder
-  public SnsUsers(long seqId, String userSeq, String oauthId, String oauthProvider, String createdUser, LocalDateTime createdAt, String updatedUser, LocalDateTime updatedAt) {
+  public SnsUsers(long seqId, long userSeq, String oauthId, String oauthProvider, String createdUser, LocalDateTime createdAt, String updatedUser, LocalDateTime updatedAt) {
     this.seqId = seqId;
     this.userSeq = userSeq;
     this.oauthId = oauthId;
