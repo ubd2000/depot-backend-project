@@ -26,8 +26,8 @@ spring:
       client:
         registration:
           google:
-            client-id: 1093562413730-q4g99afa6272tc84qir3hhbodvnns4ih.apps.googleusercontent.com
-            client-secret: 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
+            client-id: confluence_key
+            client-secret: confluence_key
             redirect-uri: http://localhost:8085/oauth/login/google
             scope: openid email profile
         provider:
