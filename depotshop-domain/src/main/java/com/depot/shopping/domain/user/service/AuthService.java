@@ -70,7 +70,7 @@ public class AuthService {
                     .build();
 
             // sns로그인 경우 어떻게 처리할지? 토큰에서 추출?
-            result = this.responseData(jwt, user, isSnsLogin ? testSnsUserRepository.findByOauthId(oauthId) : null);
+            result = this.responseData(jwt, user, isSnsLogin ? testSnsUserRepository.findByOauthId(oauthId) : null, oauthEmail);
 
             // 발급한 토큰을 redis 재등록 (추가필요)
 
@@ -111,7 +111,7 @@ public class AuthService {
                 .refreshToken(tokenService.generateRefreshToken(payload))
                 .build();
 
-        result = this.responseData(jwt, user, null);
+        result = this.responseData(jwt, user, null, "");
         // 발급받은 토큰 기준으로 redis에 등록하면될듯? (추가필요)
 
         return result;
@@ -139,7 +139,7 @@ public class AuthService {
                 .refreshToken(tokenService.generateRefreshToken(payload))
                 .build();
 
-        result = this.responseData(jwt, mpngUser.getUsers(), mpngUser.getSnsUsers());
+        result = this.responseData(jwt, mpngUser.getUsers(), mpngUser.getSnsUsers(), oauthEmail);
         // 발급받은 토큰 기준으로 redis에 등록하면될듯? (추가필요)
 
         return result;
@@ -149,7 +149,7 @@ public class AuthService {
      * 토큰과, 유저 정보로 응답객체 생성
      * @return
      */
-    private Map<String, Object> responseData(JwtDTO jwt, Users user, SnsUsers snsUsers) {
+    private Map<String, Object> responseData(JwtDTO jwt, Users user, SnsUsers snsUsers, String oauthEmail) {
         Map<String, Object> map = new HashMap<>();
 
         long expiresIn = 3600; // 1시간 (초 단위)
@@ -179,6 +179,7 @@ public class AuthService {
         map.put("expiresAt", Instant.now().plusSeconds(expiresIn).toString());
         map.put("isSnsLogin", snsUsers != null);
         map.put("oauthId", snsUsers != null ? snsUsers.getOauthId() : "");
+        map.put("oauthEmail", oauthEmail);
 
         return map;
     }
