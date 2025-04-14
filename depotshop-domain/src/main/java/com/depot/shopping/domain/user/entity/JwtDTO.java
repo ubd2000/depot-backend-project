@@ -1,10 +1,11 @@
 package com.depot.shopping.domain.user.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@Builder
 @Getter
-@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class JwtDTO {
     private String accessToken;
     private String refreshToken;

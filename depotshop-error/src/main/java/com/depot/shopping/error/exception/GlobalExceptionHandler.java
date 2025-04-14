@@ -59,6 +59,18 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * SNS 로그인 거부
+     */
+    @ExceptionHandler(CustomSnsUserRejectException.class)
+    public ResponseEntity<Map<String, Object>> handleCustomSnsUserRejectException(CustomSnsUserRejectException e) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", ErrorCode.SNS_USER_REJECT.getStatus());
+        response.put("errorCd", ErrorCode.SNS_USER_REJECT.getErrorCd());
+        response.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    /**
      * 회원 등록시 오류
      */
     @ExceptionHandler(CustomUserInsertException.class)

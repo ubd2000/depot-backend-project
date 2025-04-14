@@ -1,5 +1,6 @@
 package com.depot.shopping.domain.config;
 
+import com.depot.shopping.domain.user.entity.JwtPayload;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -43,25 +44,28 @@ public class JwtProvider {
     /**
      * Access Token 생성
      */
-    public String createAccessToken(Long seqId) {
-        return createToken(seqId, accessTokenValidity, accessKey);
+    public String createAccessToken(JwtPayload payload) {
+        return createToken(payload, accessTokenValidity, accessKey);
     }
 
     /**
      * Refresh Token 생성
      */
-    public String createRefreshToken(Long seqId) {
-        return createToken(seqId, refreshTokenValidity, refreshKey);
+    public String createRefreshToken(JwtPayload payload) {
+        return createToken(payload, refreshTokenValidity, refreshKey);
     }
 
-    private String createToken(Long seqId, long validity, Key key) {
+    private String createToken(JwtPayload payload, long validity, Key key) {
         Date now = new Date();
         return Jwts.builder()
-                .setSubject(String.valueOf(seqId))
+                .setSubject(String.valueOf(payload.getUserSeq()))
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + validity))
                 .signWith(key, SignatureAlgorithm.HS256)
                 //.claim("userIp", ip);
+                .claim("isSnsLogin", payload.isSnsLogin()) // ✅ 커스텀 클레임
+                .claim("oauthId", payload.getOauthId())
+                .claim("oauthEmail", payload.getOauthEmail())
                 .compact();
     }
 
@@ -117,10 +121,20 @@ public class JwtProvider {
                 .parseClaimsJws(token)
                 .getBody();
 
-        String userId = claims.getSubject(); // ✅ userId 꺼냄
+        String userSeq = claims.getSubject(); // ✅ userSeq 꺼냄
 
-        User user = new User(userId, "", new ArrayList<>());
+        User user = new User(userSeq, "", new ArrayList<>());
+
         return new UsernamePasswordAuthenticationToken(user, token, user.getAuthorities());
+    }
+
+    public Claims parseClaims(String token, boolean isRefreshToken) {
+        Key key = isRefreshToken ? refreshKey : accessKey;
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }
 

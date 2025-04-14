@@ -2,11 +2,12 @@ package com.depot.shopping.api.user.controller;
 
 import com.depot.shopping.api.user.dto.UserDto;
 import com.depot.shopping.domain.user.entity.JwtDTO;
-import com.depot.shopping.domain.user.entity.Users;
+import com.depot.shopping.domain.user.entity.SnsUsersMpng;
 import com.depot.shopping.domain.user.service.AuthService;
 import com.depot.shopping.domain.user.service.OAuth2Service;
 import com.depot.shopping.domain.user.service.UserService;
 import com.depot.shopping.error.exception.CustomSnsUserGetInfoException;
+import com.depot.shopping.error.exception.CustomSnsUserRejectException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -53,16 +54,21 @@ public class OAuth2Controller {
     @GetMapping("/login/google")
     public ResponseEntity<?> oAuthGoogleLogin(String code) {
         Map<String, Object> loginMap = null;
+
+        if(code == null) {
+            throw new CustomSnsUserRejectException("OAUTH_REJECT");
+        }
+
         // SNS 정보 조회
         Map<String, Object> accountInfo = oAuth2Service.googleLogin(code);
 
         if(accountInfo != null && !accountInfo.isEmpty()) {
             // SNS 고유 Id로 회원가입
             String id = accountInfo.get("sub").toString();
-            Users userInfo = userService.snsSignUp(id);
+            SnsUsersMpng mpngInfo = userService.snsSignUp(id);
 
             // 가입된 정보로 로그인 처리
-            loginMap = authService.snsLogin(userInfo);
+            loginMap = authService.snsLogin(mpngInfo, String.valueOf(accountInfo.get("email")));
         } else {
             // 조회된 SNS 정보가 없으면
             throw new CustomSnsUserGetInfoException("FAIL_GET_SNS_INFO");

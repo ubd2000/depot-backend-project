@@ -22,10 +22,10 @@ public class SnsUsersMpng {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "seq_id")
+  @JoinColumn(name = "users_seq_id")
   private Users users;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "seq_id")
+  @JoinColumn(name = "sns_users_seq_id")
   private SnsUsers snsUsers;
 }

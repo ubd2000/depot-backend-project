@@ -1,6 +1,8 @@
 package com.depot.shopping.domain;
 
 import com.depot.shopping.domain.config.JwtProvider;
+import com.depot.shopping.domain.user.entity.JwtPayload;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -16,15 +18,15 @@ public class TokenService {
     /**
      * accessToken 생성
      */
-    public String generateAccessToken(Long seqId) {
-        return jwtProvider.createAccessToken(seqId);
+    public String generateAccessToken(JwtPayload payload) {
+        return jwtProvider.createAccessToken(payload);
     }
 
     /**
      * refreshToken 생성
      */
-    public String generateRefreshToken(Long seqId) {
-        return jwtProvider.createRefreshToken(seqId);
+    public String generateRefreshToken(JwtPayload payload) {
+        return jwtProvider.createRefreshToken(payload);
     }
 
     /**
@@ -48,4 +50,10 @@ public class TokenService {
         return jwtProvider.getAuthentication(token, isRefreshToken);
     }
 
+    /**
+     * 클레임 추출
+     */
+    public Claims parseClaims(String token, boolean isRefreshToken) {
+        return jwtProvider.parseClaims(token, isRefreshToken);
+    }
 }
