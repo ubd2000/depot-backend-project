@@ -40,12 +40,12 @@ public class UserService {
      * SNS 서버로부터 받은 고유 id로 회원가입
      */
     @Transactional
-    public SnsUsersMpng snsSignUp(String id) {
+    public SnsUsersMpng snsSignUp(String id, String provider) {
         // Users result = null;
         SnsUsersMpng result = null;
 
         // 해당 조회된 고유 id로 회원여부 구분
-        SnsUsers snsUser = testSnsUserRepository.findByOauthId(id);
+        SnsUsers snsUser = testSnsUserRepository.findByOauthIdAndOauthProvider(id, provider);
 
         if (snsUser != null) {
             // 회원
@@ -69,6 +69,7 @@ public class UserService {
 
                 SnsUsers newSnsUser = SnsUsers.builder()
                         .oauthId(id)
+                        .oauthProvider(provider)
                         .createdAt(LocalDateTime.now())
                         .updatedAt(LocalDateTime.now())
                         .build();

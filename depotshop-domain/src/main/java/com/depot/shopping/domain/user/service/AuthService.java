@@ -4,7 +4,6 @@ import com.depot.shopping.domain.RedisService;
 import com.depot.shopping.domain.TokenService;
 import com.depot.shopping.domain.user.entity.*;
 import com.depot.shopping.domain.user.repository.testUserRepository;
-import com.depot.shopping.domain.user.repository.testSnsUserRepository;
 import com.depot.shopping.error.exception.CustomInvalidRefreshTokenException;
 import com.depot.shopping.error.exception.CustomUserNotFoundException;
 import com.depot.shopping.error.exception.CustomUserWrongPwdException;
@@ -27,7 +26,6 @@ import java.util.Optional;
 public class AuthService {
 
     private final testUserRepository testUserRepository;
-    private final testSnsUserRepository testSnsUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
     private final RedisService redisService;
@@ -52,6 +50,7 @@ public class AuthService {
             boolean isSnsLogin = Boolean.TRUE.equals(claims.get("isSnsLogin", Boolean.class));
             String oauthId = isSnsLogin ? String.valueOf(claims.get("oauthId")) : "";
             String oauthEmail = isSnsLogin ? String.valueOf(claims.get("oauthEmail")) : "";
+            String oauthProvider = isSnsLogin ? String.valueOf(claims.get("oauthProvider")) : "";
 
             // 추출한 userId로 정보 조회
             Users user = this.getUserInfo(seqId);
@@ -62,6 +61,7 @@ public class AuthService {
                     .isSnsLogin(isSnsLogin)
                     .oauthId(oauthId)
                     .oauthEmail(oauthEmail)
+                    .oauthProvider(oauthProvider)
                     .build();
 
             JwtDTO jwt = JwtDTO.builder()
@@ -70,7 +70,7 @@ public class AuthService {
                     .build();
 
             // sns로그인 경우 어떻게 처리할지? 토큰에서 추출?
-            result = this.responseData(jwt, user, isSnsLogin ? testSnsUserRepository.findByOauthId(oauthId) : null, oauthEmail);
+            result = this.responseData(jwt, user, payload);
 
             // 발급한 토큰을 redis 재등록 (추가필요)
 
@@ -97,12 +97,13 @@ public class AuthService {
         // redis에 기존 토큰 있으면 만료(삭제) 처리
         // redisService.removeToken(user.getUserId());
 
-        // 파라미터 세팅
+        // 파라미터 세팅 (일반 로그인시, SNS가 여러개 엮여있을수 있어 제외)
         JwtPayload payload = JwtPayload.builder()
                 .userSeq(user.getSeqId())
                 .isSnsLogin(false)
                 .oauthId("")
                 .oauthEmail("")
+                .oauthProvider("")
                 .build();
 
         // 로그인 성공 시 JWT 토큰 발급
@@ -111,7 +112,7 @@ public class AuthService {
                 .refreshToken(tokenService.generateRefreshToken(payload))
                 .build();
 
-        result = this.responseData(jwt, user, null, "");
+        result = this.responseData(jwt, user, payload);
         // 발급받은 토큰 기준으로 redis에 등록하면될듯? (추가필요)
 
         return result;
@@ -120,7 +121,7 @@ public class AuthService {
     /**
      * SNS 회원 로그인
      */
-    public Map<String, Object> snsLogin(SnsUsersMpng mpngUser, String oauthEmail) {
+    public Map<String, Object> snsLogin(SnsUsersMpng mpngUser, String oauthEmail, String provider) {
         Map<String, Object> result;
         // redis에 기존 토큰 있으면 만료(삭제) 처리
         // redisService.removeToken(user.getUserId());
@@ -131,6 +132,7 @@ public class AuthService {
                 .isSnsLogin(true)
                 .oauthId(mpngUser.getSnsUsers().getOauthId())
                 .oauthEmail(oauthEmail)
+                .oauthProvider(provider)
                 .build();
 
         // 로그인 성공 시 JWT 토큰 발급
@@ -139,7 +141,7 @@ public class AuthService {
                 .refreshToken(tokenService.generateRefreshToken(payload))
                 .build();
 
-        result = this.responseData(jwt, mpngUser.getUsers(), mpngUser.getSnsUsers(), oauthEmail);
+        result = this.responseData(jwt, mpngUser.getUsers(), payload);
         // 발급받은 토큰 기준으로 redis에 등록하면될듯? (추가필요)
 
         return result;
@@ -149,7 +151,7 @@ public class AuthService {
      * 토큰과, 유저 정보로 응답객체 생성
      * @return
      */
-    private Map<String, Object> responseData(JwtDTO jwt, Users user, SnsUsers snsUsers, String oauthEmail) {
+    private Map<String, Object> responseData(JwtDTO jwt, Users user, JwtPayload payload) {
         Map<String, Object> map = new HashMap<>();
 
         long expiresIn = 3600; // 1시간 (초 단위)
@@ -167,6 +169,10 @@ public class AuthService {
         // permissions	사용자가 FO/BO에서 수행할 수 있는 권한 리스트 (ex: READ_USERS, MANAGE_ORDERS)	⚠️ 선택
         // issuedAt	토큰 발급 시간 (ISO 8601 포맷)	⚠️ 선택
         // expiresAt 토큰 만료 시간 (ISO 8601 포맷) ⚠️ 선택
+        // isSnsLogin 로그인 경로가 SNS 여부
+        // oauthId SNS 로그인 시 oauthId값
+        // oauthEmail SNS 로그인 시 해당 이메일값
+        // oauthProvider SNS 플랫폼
         map.put("accessToken", jwt.getAccessToken());
         map.put("refreshToken", jwt.getRefreshToken());
         map.put("expiresIn", expiresIn);
@@ -177,9 +183,10 @@ public class AuthService {
         map.put("role", user.getRole());
         map.put("issuedAt", Instant.now().toString());
         map.put("expiresAt", Instant.now().plusSeconds(expiresIn).toString());
-        map.put("isSnsLogin", snsUsers != null);
-        map.put("oauthId", snsUsers != null ? snsUsers.getOauthId() : "");
-        map.put("oauthEmail", oauthEmail);
+        map.put("isSnsLogin", payload.isSnsLogin());
+        map.put("oauthId", payload.getOauthId());
+        map.put("oauthEmail", payload.getOauthEmail());
+        map.put("oauthProvider", payload.getOauthProvider());
 
         return map;
     }

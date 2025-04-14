@@ -53,6 +53,7 @@ public class OAuth2Controller {
 
     @GetMapping("/login/google")
     public ResponseEntity<?> oAuthGoogleLogin(String code) {
+        String provider = "google";
         Map<String, Object> loginMap = null;
 
         if(code == null) {
@@ -65,10 +66,10 @@ public class OAuth2Controller {
         if(accountInfo != null && !accountInfo.isEmpty()) {
             // SNS 고유 Id로 회원가입
             String id = accountInfo.get("sub").toString();
-            SnsUsersMpng mpngInfo = userService.snsSignUp(id);
+            SnsUsersMpng mpngInfo = userService.snsSignUp(id, provider);
 
             // 가입된 정보로 로그인 처리
-            loginMap = authService.snsLogin(mpngInfo, String.valueOf(accountInfo.get("email")));
+            loginMap = authService.snsLogin(mpngInfo, String.valueOf(accountInfo.get("email")), provider);
         } else {
             // 조회된 SNS 정보가 없으면
             throw new CustomSnsUserGetInfoException("FAIL_GET_SNS_INFO");

@@ -9,7 +9,13 @@ import java.time.LocalDateTime;
 
 
 @Entity
-@Table(name = "sns_users")
+@Table(
+        name = "sns_users",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uk_oauth_id_provider",
+                columnNames = {"oauth_id", "oauth_provider"}
+        )
+)
 @Getter
 @NoArgsConstructor
 public class SnsUsers {

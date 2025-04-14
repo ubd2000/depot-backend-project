@@ -11,4 +11,5 @@ public class JwtPayload {
     private boolean isSnsLogin;
     private String oauthId;
     private String oauthEmail;
+    private String oauthProvider;
 }

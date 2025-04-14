@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface testSnsUserRepository extends JpaRepository<SnsUsers, String> {
-    SnsUsers findByOauthId(String oauthId);
+    SnsUsers findByOauthIdAndOauthProvider(String oauthId, String provider);
 }
