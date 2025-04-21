@@ -66,6 +66,7 @@ public class JwtProvider {
                 .claim("isSnsLogin", payload.isSnsLogin()) // ✅ 커스텀 클레임
                 .claim("oauthId", payload.getOauthId())
                 .claim("oauthEmail", payload.getOauthEmail())
+                .claim("role",payload.getRole())
                 .compact();
     }
 

@@ -4,6 +4,7 @@ import com.depot.shopping.domain.RedisService;
 import com.depot.shopping.domain.TokenService;
 import com.depot.shopping.domain.user.entity.*;
 import com.depot.shopping.domain.user.repository.testUserRepository;
+import com.depot.shopping.domain.user.repository.testSnsUserMpngRepository;
 import com.depot.shopping.error.exception.CustomInvalidRefreshTokenException;
 import com.depot.shopping.error.exception.CustomUserNotFoundException;
 import com.depot.shopping.error.exception.CustomUserWrongPwdException;
@@ -26,6 +27,7 @@ import java.util.Optional;
 public class AuthService {
 
     private final testUserRepository testUserRepository;
+    private final testSnsUserMpngRepository testSnsUserMpngRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
     private final RedisService redisService;
@@ -62,6 +64,7 @@ public class AuthService {
                     .oauthId(oauthId)
                     .oauthEmail(oauthEmail)
                     .oauthProvider(oauthProvider)
+                    .role(user.getRole())
                     .build();
 
             JwtDTO jwt = JwtDTO.builder()
@@ -104,6 +107,7 @@ public class AuthService {
                 .oauthId("")
                 .oauthEmail("")
                 .oauthProvider("")
+                .role(user.getRole())
                 .build();
 
         // 로그인 성공 시 JWT 토큰 발급
@@ -126,13 +130,16 @@ public class AuthService {
         // redis에 기존 토큰 있으면 만료(삭제) 처리
         // redisService.removeToken(user.getUserId());
 
+        SnsUsersMpng mpngDtl = testSnsUserMpngRepository.findBySnsUsers(mpngUser.getSnsUsers());
+
         // 파라미터 세팅
         JwtPayload payload = JwtPayload.builder()
-                .userSeq(mpngUser.getUsers().getSeqId())
+                .userSeq(mpngDtl.getUsers().getSeqId())
                 .isSnsLogin(true)
-                .oauthId(mpngUser.getSnsUsers().getOauthId())
+                .oauthId(mpngDtl.getSnsUsers().getOauthId())
                 .oauthEmail(oauthEmail)
                 .oauthProvider(provider)
+                .role(mpngDtl.getUsers().getRole())
                 .build();
 
         // 로그인 성공 시 JWT 토큰 발급
@@ -141,7 +148,7 @@ public class AuthService {
                 .refreshToken(tokenService.generateRefreshToken(payload))
                 .build();
 
-        result = this.responseData(jwt, mpngUser.getUsers(), payload);
+        result = this.responseData(jwt, mpngDtl.getUsers(), payload);
         // 발급받은 토큰 기준으로 redis에 등록하면될듯? (추가필요)
 
         return result;

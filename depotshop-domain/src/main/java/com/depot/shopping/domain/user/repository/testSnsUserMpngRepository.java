@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface testSnsUserMpngRepository extends JpaRepository<SnsUsersMpng, String> {
-    @EntityGraph(attributePaths = "users")  // (최적화용) JPA 에서 추가 쿼리 없이 users까지 한 번에 가져오기, 없으면 .getUsers() 실행 시 쿼리 조회 나감.
+    @EntityGraph(attributePaths = {"users", "snsUsers"})  // (최적화용) JPA 에서 추가 쿼리 없이 users까지 한 번에 가져오기, 없으면 .getUsers() 실행 시 쿼리 조회 나감.
     SnsUsersMpng findBySnsUsers(SnsUsers snsUsers);
 }

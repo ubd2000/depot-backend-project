@@ -45,6 +45,7 @@ public class SecurityConfig {
 //                                .requestMatchers("/").permitAll() // 해당 주소 접근은 허용
 //                                .requestMatchers("/login").permitAll() // 해당 주소 접근은 허용
 //                                .requestMatchers("/images/**", "/js/**", "/css/**").permitAll() // 해당 주소 접근은 허용
+//                                .requestMatchers("/admin/**").hasRole("admin")    // 관리자쪽 맵핑은 관리자 권한
                                 .anyRequest().authenticated()   // 그 외 요청 인증필요
                 )
 

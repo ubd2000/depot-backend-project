@@ -12,4 +12,5 @@ public class JwtPayload {
     private String oauthId;
     private String oauthEmail;
     private String oauthProvider;
+    private String role;
 }
