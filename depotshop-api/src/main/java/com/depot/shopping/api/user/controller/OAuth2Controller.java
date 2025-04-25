@@ -2,6 +2,7 @@ package com.depot.shopping.api.user.controller;
 
 import com.depot.shopping.api.user.dto.UserDto;
 import com.depot.shopping.domain.user.entity.JwtDTO;
+import com.depot.shopping.domain.user.entity.SnsUsers;
 import com.depot.shopping.domain.user.entity.SnsUsersMpng;
 import com.depot.shopping.domain.user.service.AuthService;
 import com.depot.shopping.domain.user.service.OAuth2Service;
@@ -62,11 +63,19 @@ public class OAuth2Controller {
 
         // SNS 정보 조회
         Map<String, Object> accountInfo = oAuth2Service.googleLogin(code);
+        SnsUsersMpng mpngInfo = null;
 
         if(accountInfo != null && !accountInfo.isEmpty()) {
             // SNS 고유 Id로 회원가입
             String id = accountInfo.get("sub").toString();
-            SnsUsersMpng mpngInfo = userService.snsSignUp(id, provider);
+
+            SnsUsers snsUser = userService.isSnsUser(id, provider);
+            if (snsUser != null) {
+                // 회원
+                mpngInfo = userService.getSnsUsersMpng(snsUser);
+            } else {
+                mpngInfo = userService.snsSignUp(id, provider);
+            }
 
             // 가입된 정보로 로그인 처리
             loginMap = authService.snsLogin(mpngInfo, String.valueOf(accountInfo.get("email")), provider);

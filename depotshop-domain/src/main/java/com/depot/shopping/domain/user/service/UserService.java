@@ -37,65 +37,69 @@ public class UserService {
     }
 
     /**
+     * SNS 가입된 유저인지 확인
+     */
+    public SnsUsers isSnsUser(String id, String provider) {
+        // 해당 조회된 고유 id로 회원여부 구분
+        return testSnsUserRepository.findByOauthIdAndOauthProvider(id, provider);
+    }
+
+    /**
+     * SNS 회원 정보로 맵핑을 통해 실제 회원 정보 조회
+     */
+    public SnsUsersMpng getSnsUsersMpng(SnsUsers snsUser) {
+        return testSnsUserMpngRepository.findBySnsUsers(snsUser);
+    }
+
+    /**
      * SNS 서버로부터 받은 고유 id로 회원가입
      */
     @Transactional
     public SnsUsersMpng snsSignUp(String id, String provider) {
-        // Users result = null;
         SnsUsersMpng result = null;
 
-        // 해당 조회된 고유 id로 회원여부 구분
-        SnsUsers snsUser = testSnsUserRepository.findByOauthIdAndOauthProvider(id, provider);
+        // 비회원
+        try {
+            Users newUser = Users.builder()
+                    .role("user")
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
+                    .build();
 
-        if (snsUser != null) {
-            // 회원
-            // 회원정보 리턴
-            // SNS 회원 정보로 맵핑을 통해 실제 회원 정보 조회
-            result = testSnsUserMpngRepository.findBySnsUsers(snsUser);
-        } else {
-            // 비회원
-            try {
-                Users newUser = Users.builder()
-                        .role("user")
-                        .createdAt(LocalDateTime.now())
-                        .updatedAt(LocalDateTime.now())
-                        .build();
-
-                // 회원 추가
-                Users savedUser = testUserRepository.save(newUser);
-                if (savedUser.getSeqId() <= 0) {
-                    throw new CustomUserInsertException("USER_INSERT_ERROR");
-                }
-
-                SnsUsers newSnsUser = SnsUsers.builder()
-                        .oauthId(id)
-                        .oauthProvider(provider)
-                        .createdAt(LocalDateTime.now())
-                        .updatedAt(LocalDateTime.now())
-                        .build();
-
-                // 회원등록 후 SNS 계정 정보 추가
-                SnsUsers savedSnsUser = testSnsUserRepository.save(newSnsUser);
-                if (savedSnsUser.getSeqId() <= 0) {
-                    throw new CustomUserInsertException("USER_INSERT_ERROR");
-                }
-
-                SnsUsersMpng newMpng = SnsUsersMpng.builder()
-                        .users(savedUser)
-                        .snsUsers(savedSnsUser)
-                        .build();
-
-                // 회원과 SNS 회원계정 맵핑 정보 추가
-                SnsUsersMpng savedMpng = testSnsUserMpngRepository.save(newMpng);
-                if (savedMpng.getUsers() == null || savedMpng.getSnsUsers() == null) {
-                    throw new CustomUserInsertException("USER_INSERT_ERROR");
-                }
-
-                result = savedMpng;
-            } catch (Exception e) {
-                // 등록실패
+            // 회원 추가
+            Users savedUser = testUserRepository.save(newUser);
+            if (savedUser.getSeqId() <= 0) {
                 throw new CustomUserInsertException("USER_INSERT_ERROR");
             }
+
+            SnsUsers newSnsUser = SnsUsers.builder()
+                    .oauthId(id)
+                    .oauthProvider(provider)
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
+                    .build();
+
+            // 회원등록 후 SNS 계정 정보 추가
+            SnsUsers savedSnsUser = testSnsUserRepository.save(newSnsUser);
+            if (savedSnsUser.getSeqId() <= 0) {
+                throw new CustomUserInsertException("USER_INSERT_ERROR");
+            }
+
+            SnsUsersMpng newMpng = SnsUsersMpng.builder()
+                    .users(savedUser)
+                    .snsUsers(savedSnsUser)
+                    .build();
+
+            // 회원과 SNS 회원계정 맵핑 정보 추가
+            SnsUsersMpng savedMpng = testSnsUserMpngRepository.save(newMpng);
+            if (savedMpng.getUsers() == null || savedMpng.getSnsUsers() == null) {
+                throw new CustomUserInsertException("USER_INSERT_ERROR");
+            }
+
+            result = savedMpng;
+        } catch (Exception e) {
+            // 등록실패
+            throw new CustomUserInsertException("USER_INSERT_ERROR");
         }
 
         return result;
