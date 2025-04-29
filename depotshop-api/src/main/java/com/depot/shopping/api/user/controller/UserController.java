@@ -1,7 +1,10 @@
 package com.depot.shopping.api.user.controller;
 
 import com.depot.shopping.api.user.dto.UserDto;
+import com.depot.shopping.domain.user.entity.Users;
+import com.depot.shopping.domain.user.service.AuthService;
 import com.depot.shopping.domain.user.service.UserService;
+import com.depot.shopping.error.exception.CustomUserConflictException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,5 +37,20 @@ public class UserController {
     @PostMapping("/user")
     public ResponseEntity<?> saveUser(@RequestBody UserDto userDto) {
         return ResponseEntity.ok(userService.save(UserDto.toEntity(userDto)));
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestBody UserDto userDto) {
+        // 가입된유저 체크
+        Users userInfo = userService.isUser(userDto.getUserId());
+        if(userInfo != null) {
+            // 이미 가입된 경우
+            throw new CustomUserConflictException("FAIL_ACCOUNT_CONFLICT");
+        }
+
+        // 회원가입
+        Users newUser = userService.signUp(UserDto.toEntity(userDto));
+
+        return ResponseEntity.ok(newUser);
     }
 }

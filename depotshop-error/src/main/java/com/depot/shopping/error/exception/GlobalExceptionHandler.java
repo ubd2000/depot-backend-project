@@ -83,6 +83,19 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 이미 등록된 회원
+     */
+    @ExceptionHandler(CustomUserConflictException.class)
+    public ResponseEntity<Map<String, Object>> handleCustomUserConflictException(CustomUserConflictException e) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", ErrorCode.USER_ACCOUNT_CONFLICT.getStatus());
+        response.put("errorCd", ErrorCode.USER_ACCOUNT_CONFLICT.getErrorCd());
+        response.put("desc", ErrorCode.USER_INSERT.getDescription());
+        response.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    /**
      * 만료된 리프레시 토큰
      */
     @ExceptionHandler(CustomInvalidRefreshTokenException.class)
